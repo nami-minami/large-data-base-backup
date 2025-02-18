@@ -1,0 +1,28 @@
+services:
+  db:
+    build: ./docker/db/
+    environment:
+      MYSQL_DATABASE: employees
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_USER: genus
+      MYSQL_PASSWORD: pass
+      TZ: "Asia/Tokyo"
+    volumes:
+      - type: volume
+        source: db-data
+        target: /var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin
+    depends_on:
+      - db
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOSTS: db
+      PMA_USER: genus
+      PMA_PASSWORD: pass
+  backup:
+    build: ./docker/backup/
+
+volumes:
+  db-data:
